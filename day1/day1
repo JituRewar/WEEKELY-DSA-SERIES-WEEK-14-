@@ -1,0 +1,176 @@
+# Week 14 - Day 1: Inorder Predecessor & Successor in BST
+
+## 📌 Problem Statement
+Given a Binary Search Tree (BST) and a key, find:
+
+- **Inorder Predecessor** → Largest value smaller than key  
+- **Inorder Successor** → Smallest value greater than key  
+
+---
+
+## 🚀 Approach
+
+We use BST properties to efficiently find predecessor and successor.
+
+### 🧠 Key Idea
+
+While traversing:
+- If `key < current`  
+  → current can be successor → move left  
+
+- If `key > current`  
+  → current can be predecessor → move right  
+
+- If `key == current`  
+  → 
+  - Predecessor = **rightmost node of left subtree**
+  - Successor = **leftmost node of right subtree**
+
+---
+
+## 🔥 Helper Functions
+
+- `rightMostValInLeftSubTree()` → Finds predecessor  
+- `leftMostValInRightSubTree()` → Finds successor  
+
+---
+
+## ⚡ Time Complexity
+- **O(H)** → Height of tree  
+
+## 💾 Space Complexity
+- **O(1)** (Iterative approach)
+
+---
+
+---
+
+## 🔑 Key Concepts Learned
+- BST traversal optimization
+- Inorder properties
+- Tree navigation without full traversal
+
+---
+
+## ⚠️ Edge Cases
+- If predecessor or successor doesn’t exist → handle NULL
+- Avoid direct access like `pred->data` without checking
+
+---
+
+## 🏁 Conclusion
+This problem shows how to use BST properties to find answers in **O(H)** instead of O(N).
+
+---
+#include <bits/stdc++.h>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int val)
+    {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+Node *insert(Node *root, int val)
+{
+    if (root == NULL)
+    {
+        return new Node(val);
+    }
+
+    if (val < root->data)
+    {
+        root->left = insert(root->left, val);
+    }
+    else
+    {
+        root->right = insert(root->right, val);
+    }
+    return root;
+}
+
+// creation of binary search tree
+Node *buildBST(vector<int> arr)
+{
+    Node *root = NULL;
+    for (int val : arr)
+    {
+        root = insert(root, val);
+    }
+    return root;
+}
+
+Node* rightMostValInLeftSubTree(Node* root){
+    Node* ans;
+    while (root!=NULL)
+    {
+        ans = root;
+        root = root->right;
+    }
+    
+    return ans;
+}
+Node* leftMostValInRightSubTree(Node* root){
+    Node* ans;
+    while (root!=NULL)
+    {
+        ans = root;
+        root = root->left;
+    }
+    
+    return ans;
+}
+
+// inorder predesessor(just small val) and inorder successor (just next val)
+vector<int> getPreSucc(Node* root,int key){
+    Node* curr = root;
+    Node* pred = NULL;
+    Node* succ = NULL;
+
+    while (curr!=NULL)
+    {
+       if(key < curr->data){
+        succ = curr; // potential option for successor 
+        curr = curr->left;
+       }
+       else if(key > curr->data){
+        pred = curr;
+        curr = curr->right;
+       }
+       else{//key == curr->data
+        if(curr->left != NULL){
+            // finding pred
+            // right most value in left subtree
+            pred = rightMostValInLeftSubTree(root->left);
+        }
+        if(curr->right != NULL){
+            // finding succ
+            // left most val in right subtree
+            succ = leftMostValInRightSubTree(root->right);
+        }
+        break;
+       }
+    }
+    
+    return {pred->data, succ->data};
+}
+
+int main()
+{
+    vector<int> arr = {1,4,5,6,7,8,9};
+    Node *root = buildBST(arr);
+    vector<int> ans = getPreSucc(root,3);
+    cout<< "pred: " << ans[0] << endl;
+    cout<< "succ: " << ans[1] << endl;
+    return 0;
+}
+
+Input:
