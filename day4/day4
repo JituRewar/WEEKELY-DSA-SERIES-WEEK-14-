@@ -1,0 +1,94 @@
+# Week 14 - Day 4: Depth First Search (DFS)
+
+## 📌 Problem Statement
+Implement **Depth First Search (DFS)** traversal for a graph.
+
+---
+
+## 🚀 What is DFS?
+
+**DFS (Depth First Search)** is a graph traversal algorithm that explores nodes **as deep as possible before backtracking**.
+
+👉 It uses **recursion (stack internally)** or an explicit stack.
+
+---
+
+## 🧠 Key Idea
+
+1. Start from a source node  
+2. Mark it as visited  
+3. Visit one neighbor deeply  
+4. Continue until no unvisited nodes  
+5. Backtrack  
+
+---
+
+## 🔥 Algorithm Steps
+
+## ⚡ Time Complexity
+- **O(V + E)**
+
+## 💾 Space Complexity
+- **O(V)** (visited + recursion stack)
+
+---
+#include <bits/stdc++.h>
+using namespace std;
+
+class Graph {
+    int V;
+    list<int> *l; 
+
+public:
+    Graph(int V) {
+        this->V = V;
+        l = new list<int>[V];
+    }
+
+    // Best practice: Add a destructor to free memory
+    ~Graph() {
+        delete[] l;
+    }
+
+    void addEdge(int u, int v) {
+        l[u].push_back(v);
+        l[v].push_back(u);
+    }
+
+    void DFSHelper(int u, vector<bool>& vis) { //traverse first unvisited neighbor
+    cout<<u<<" ";
+    vis[u] = true;
+
+    for(int v : l[u]){
+        if(!vis[v]){
+            DFSHelper(v,vis);
+        }
+    }
+}
+
+    void DFS(int startNode){
+        vector<bool> vis(V,false);
+        DFSHelper(startNode,vis);
+    }
+};
+
+
+
+int main() {
+    // Increased size to 21 to accommodate node '20'
+    Graph g(21); 
+    
+    g.addEdge(4, 3);
+    g.addEdge(3, 2);
+    g.addEdge(3, 19);
+    g.addEdge(19, 20);
+    g.addEdge(2, 18);
+
+    cout << "BFS starting from node 4:" << endl;
+    g.BFS(4);
+
+     cout << "DFS starting from node 4:" << endl;
+    g.DFS(4);
+    return 0;
+}
+  
