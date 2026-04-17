@@ -1,0 +1,83 @@
+Cycle detection in Graph using DFS
+
+  #include <bits/stdc++.h>
+using namespace std;
+
+class Graph
+{
+    int V;
+    list<int> *l;
+
+public:
+    Graph(int V)
+    {
+        this->V = V;
+        l = new list<int>[V];
+    }
+
+    // Best practice: Add a destructor to free memory
+    ~Graph()
+    {
+        delete[] l;
+    }
+
+    void addEdge(int u, int v)
+    {
+        l[u].push_back(v);
+        l[v].push_back(u);
+    }
+
+    bool cycleDetDFS(vector<bool> &vis, int parent, int src)
+    {
+        vis[src] = true;
+        list<int> neighbours = l[src];
+
+        for (int V : neighbours)
+        {
+            if (!vis[V])
+            {
+                if (cycleDetDFS(vis, src, V))
+                    return true;
+            }
+            else if (V != parent)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool isCycle()
+    {
+        vector<bool> vis(V, false);
+
+        // for all verties(like if graph divided into two parts)
+        for (int i = 0; i < V; i++)
+        {
+            if (!vis[i])
+            {
+                if (cycleDetDFS(vis, -1, i))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+int main()
+{
+
+    Graph g(5);
+
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(0, 3);
+    g.addEdge(1, 2);
+    g.addEdge(3, 4);
+    cout << g.isCycle() << endl;
+
+    return 0;
+}
