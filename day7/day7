@@ -1,0 +1,79 @@
+# Week 14 - Day 7: Number of Islands (LeetCode 200)
+
+## 📌 Problem Statement
+Given a 2D grid of `'1'`s (land) and `'0'`s (water), count the number of islands.
+
+👉 An island is surrounded by water and is formed by connecting adjacent lands (horizontal or vertical).
+
+---
+
+## 🚀 Approach (DFS)
+
+We treat the grid as a graph:
+- Each cell = node
+- Adjacent land cells = edges
+
+### 🧠 Key Idea
+
+1. Traverse the grid
+2. If cell == '1':
+   - Found a new island
+   - Run DFS to mark all connected land as visited
+3. Increase island count
+
+---
+
+## 🔥 DFS Logic
+
+- Visit current cell
+- Mark it as visited (convert '1' → '0')
+- Explore 4 directions:
+  - Up
+  - Down
+  - Left
+  - Right
+
+---
+
+## ⚡ Time Complexity
+- **O(N × M)** → Every cell visited once
+
+## 💾 Space Complexity
+- **O(N × M)** → Recursive stack (worst case)
+
+class Solution {
+public:
+
+    void dfs(vector<vector<char>>& grid,vector<vector<bool>> &vis,int i,int j,int n,int m){
+        if(i<0 || j<0 || i>=n || j>=m || vis[i][j] || grid[i][j]!='1'){
+            return;
+        }
+
+        vis[i][j] = true; //marking visited of current vertices
+        //call for all connected vertices
+        dfs(grid,vis,i-1,j,n,m); //top
+        dfs(grid,vis,i,j+1,n,m); //right
+        dfs(grid,vis,i+1,j,n,m); //down
+        dfs(grid,vis,i,j-1,n,m); //left
+
+    }
+    int numIslands(vector<vector<char>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        int islands = 0;
+        vector<vector<bool>> vis(n,vector<bool>(m,false));
+
+        //traversing all of the vertices
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]=='1' && !vis[i][j]){
+                dfs(grid,vis,i,j,n,m);
+                islands++;
+                }
+            }
+        }
+    return islands;
+    }
+};
+
+Input:
