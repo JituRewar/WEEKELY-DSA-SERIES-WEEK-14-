@@ -149,12 +149,12 @@ vector<int> getPreSucc(Node* root,int key){
         if(curr->left != NULL){
             // finding pred
             // right most value in left subtree
-            pred = rightMostValInLeftSubTree(root->left);
+            pred = rightMostValInLeftSubTree(curr->left); 
         }
         if(curr->right != NULL){
             // finding succ
             // left most val in right subtree
-            succ = leftMostValInRightSubTree(root->right);
+            succ = leftMostValInRightSubTree(curr->right); 
         }
         break;
        }
